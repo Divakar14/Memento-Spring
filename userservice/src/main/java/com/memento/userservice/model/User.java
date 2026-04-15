@@ -29,8 +29,8 @@ public class User {
     private ProviderType provider = ProviderType.LOCAL;
     private String providerId;
 
-    private String isVerified;
-    private String isActive;
+    private Boolean isVerified;
+    private Boolean isActive;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -41,7 +41,7 @@ public class User {
     public User() {
     }
 
-    public User(String id, String email, String firstName, String lastName, String password, UserRole role, ProviderType provider, String providerId, String isVerified, String isActive, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public User(String id, String email, String firstName, String lastName, String password, UserRole role, ProviderType provider, String providerId, Boolean isVerified, Boolean isActive, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
@@ -120,20 +120,20 @@ public class User {
         this.providerId = providerId;
     }
 
-    public String getIsVerified() {
+    public Boolean getVerified() {
         return isVerified;
     }
 
-    public void setIsVerified(String isVerified) {
-        this.isVerified = isVerified;
+    public void setVerified(Boolean verified) {
+        isVerified = verified;
     }
 
-    public String getIsActive() {
+    public Boolean getActive() {
         return isActive;
     }
 
-    public void setIsActive(String isActive) {
-        this.isActive = isActive;
+    public void setActive(Boolean active) {
+        isActive = active;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -163,8 +163,8 @@ public class User {
                 ", role=" + role +
                 ", provider=" + provider +
                 ", providerId='" + providerId + '\'' +
-                ", isVerified='" + isVerified + '\'' +
-                ", isActive='" + isActive + '\'' +
+                ", isVerified=" + isVerified +
+                ", isActive=" + isActive +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}';

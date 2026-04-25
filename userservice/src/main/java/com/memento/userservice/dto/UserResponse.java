@@ -1,7 +1,5 @@
 package com.memento.userservice.dto;
 
-import com.memento.userservice.model.ProviderType;
-
 import java.time.LocalDateTime;
 
 public class UserResponse {
@@ -10,25 +8,23 @@ public class UserResponse {
     private String email;
     private String firstName;
     private String lastName;
-    private String password;
-    private ProviderType provider = ProviderType.LOCAL;
-    private Boolean isVerified;
-    private Boolean isActive;
+    private String displayName;
+    private String avatarUrl;
+    private LocalDateTime lastLoginAt;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     public UserResponse() {
     }
 
-    public UserResponse(String id, String email, String firstName, String lastName, String password, ProviderType provider, Boolean isVerified, Boolean isActive, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public UserResponse(String id, String email, String firstName, String lastName, String displayName, String avatarUrl, LocalDateTime lastLoginAt, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.password = password;
-        this.provider = provider;
-        this.isVerified = isVerified;
-        this.isActive = isActive;
+        this.displayName = displayName;
+        this.avatarUrl = avatarUrl;
+        this.lastLoginAt = lastLoginAt;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -65,36 +61,28 @@ public class UserResponse {
         this.lastName = lastName;
     }
 
-    public String getPassword() {
-        return password;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
-    public ProviderType getProvider() {
-        return provider;
+    public String getAvatarUrl() {
+        return avatarUrl;
     }
 
-    public void setProvider(ProviderType provider) {
-        this.provider = provider;
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
-    public Boolean getVerified() {
-        return isVerified;
+    public LocalDateTime getLastLoginAt() {
+        return lastLoginAt;
     }
 
-    public void setVerified(Boolean verified) {
-        isVerified = verified;
-    }
-
-    public Boolean getActive() {
-        return isActive;
-    }
-
-    public void setActive(Boolean active) {
-        isActive = active;
+    public void setLastLoginAt(LocalDateTime lastLoginAt) {
+        this.lastLoginAt = lastLoginAt;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -120,10 +108,9 @@ public class UserResponse {
                 ", email='" + email + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", password='" + password + '\'' +
-                ", provider=" + provider +
-                ", isVerified=" + isVerified +
-                ", isActive=" + isActive +
+                ", displayName='" + displayName + '\'' +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                ", lastLoginAt=" + lastLoginAt +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}';

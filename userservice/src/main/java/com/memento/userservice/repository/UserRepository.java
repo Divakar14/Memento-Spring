@@ -1,13 +1,16 @@
 package com.memento.userservice.repository;
 
-import com.memento.userservice.model.User;
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.Optional;
+
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import com.memento.userservice.model.User;
+
 @Repository
-public interface UserRepository extends JpaRepository<User, String> {
+public interface UserRepository extends MongoRepository<User, String> {
     
     boolean existsByEmail(String email);
 
-    User findByEmail(String email);
+    Optional<User> findByEmail(String email);
 }

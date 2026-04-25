@@ -1,57 +1,55 @@
 package com.memento.userservice.model;
 
-import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "users")
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "memento_users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column(unique = true, nullable = false)
+    @Indexed(unique = true)
     private String email;
 
     private String firstName;
     private String lastName;
+    private String displayName;
+    private String avatarUrl;
 
-    private String password;
-
-    @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.USER;
 
-    @Enumerated(EnumType.STRING)
-    private ProviderType provider = ProviderType.LOCAL;
-    private String providerId;
+    private Long projectsCreated = 0L;
+    private Long tasksCreated = 0L;
+    private Long notesCreated = 0L;
+    private LocalDateTime lastLoginAt;
 
-    private Boolean isVerified;
-    private Boolean isActive;
-
-    @CreationTimestamp
+    @CreatedDate
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 
     public User() {
     }
 
-    public User(String id, String email, String firstName, String lastName, String password, UserRole role, ProviderType provider, String providerId, Boolean isVerified, Boolean isActive, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public User(String id, String email, String firstName, String lastName, String displayName, String avatarUrl, UserRole role, Long projectsCreated, Long tasksCreated, Long notesCreated, LocalDateTime lastLoginAt, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.password = password;
+        this.displayName = displayName;
+        this.avatarUrl = avatarUrl;
         this.role = role;
-        this.provider = provider;
-        this.providerId = providerId;
-        this.isVerified = isVerified;
-        this.isActive = isActive;
+        this.projectsCreated = projectsCreated;
+        this.tasksCreated = tasksCreated;
+        this.notesCreated = notesCreated;
+        this.lastLoginAt = lastLoginAt;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -88,12 +86,20 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getPassword() {
-        return password;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
     public UserRole getRole() {
@@ -104,36 +110,36 @@ public class User {
         this.role = role;
     }
 
-    public ProviderType getProvider() {
-        return provider;
+    public Long getProjectsCreated() {
+        return projectsCreated;
     }
 
-    public void setProvider(ProviderType provider) {
-        this.provider = provider;
+    public void setProjectsCreated(Long projectsCreated) {
+        this.projectsCreated = projectsCreated;
     }
 
-    public String getProviderId() {
-        return providerId;
+    public Long getTasksCreated() {
+        return tasksCreated;
     }
 
-    public void setProviderId(String providerId) {
-        this.providerId = providerId;
+    public void setTasksCreated(Long tasksCreated) {
+        this.tasksCreated = tasksCreated;
     }
 
-    public Boolean getVerified() {
-        return isVerified;
+    public Long getNotesCreated() {
+        return notesCreated;
     }
 
-    public void setVerified(Boolean verified) {
-        isVerified = verified;
+    public void setNotesCreated(Long notesCreated) {
+        this.notesCreated = notesCreated;
     }
 
-    public Boolean getActive() {
-        return isActive;
+    public LocalDateTime getLastLoginAt() {
+        return lastLoginAt;
     }
 
-    public void setActive(Boolean active) {
-        isActive = active;
+    public void setLastLoginAt(LocalDateTime lastLoginAt) {
+        this.lastLoginAt = lastLoginAt;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -159,12 +165,12 @@ public class User {
                 ", email='" + email + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", password='" + password + '\'' +
+                ", displayName='" + displayName + '\'' +
+                ", avatarUrl='" + avatarUrl + '\'' +
                 ", role=" + role +
-                ", provider=" + provider +
-                ", providerId='" + providerId + '\'' +
-                ", isVerified=" + isVerified +
-                ", isActive=" + isActive +
+                ", projectsCreated=" + projectsCreated +
+                ", tasksCreated=" + tasksCreated +
+                ", notesCreated=" + notesCreated +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}';

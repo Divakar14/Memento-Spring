@@ -1,14 +1,21 @@
 spring:
   application:
     name: user-service
-  datasource:
-    url: jdbc:mysql://localhost:3306/memento_user_db
-    username: root
-    password: Admin@2026
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/memento
 
-  jpa:
-    hibernate:
-      ddl-auto: update
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8181/realms/memento
+          jwk-set-uri: http://localhost:8181/realms/memento/protocol/openid-connect/certs
 
 server:
     port: 8081
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.keycloak: INFO

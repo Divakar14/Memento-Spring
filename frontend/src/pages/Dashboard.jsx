@@ -1,10 +1,20 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../context/AuthContext'
 
 export const Dashboard = () => {
   const { userProfile, isAuthenticated, loading, logout } = useAuthContext()
   const navigate = useNavigate()
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+
+  const navItems = [
+    { id: 'home', label: 'Home' },
+    { id: 'projects', label: 'Projects' },
+    { id: 'tasks', label: 'Tasks' },
+    { id: 'notes', label: 'Notes' },
+    { id: 'calendar', label: 'Calendar' },
+    { id: 'profile', label: 'Profile' },
+  ]
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
@@ -26,36 +36,115 @@ export const Dashboard = () => {
   }
 
   return (
-    <div className="w-full min-h-screen" style={{ backgroundColor: '#F5EDE5' }}>
-      {/* Header */}
-      <header className="shadow-sm" style={{ backgroundColor: '#2D1B2E' }}>
-        <div className="container py-4 px-6 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div
-              className="w-12 h-12 rounded-lg flex items-center justify-center"
-              style={{ backgroundColor: '#F76C6C' }}
+    <div className="min-h-screen lg:flex" style={{ backgroundColor: '#F5EDE5' }}>
+      {isSidebarOpen && (
+        <button
+          type="button"
+          aria-label="Close navigation overlay"
+          className="fixed inset-0 z-30 bg-black/40 lg:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
+      <aside
+        className={`fixed inset-y-0 left-0 z-40 w-72 transform transition-transform duration-300 lg:static lg:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        style={{ backgroundColor: '#2D1B2E' }}
+      >
+        <div className="flex h-full flex-col px-5 py-6">
+          <div className="flex items-center justify-between pb-6" style={{ borderBottom: '1px solid #3d2540' }}>
+            <img src="/assets/memento-logo.png" alt="Memento" className="h-14 w-auto object-contain" />
+            <button
+              type="button"
+              className="rounded-lg p-2 lg:hidden"
+              style={{ color: '#F5EDE5' }}
+              onClick={() => setIsSidebarOpen(false)}
             >
-              <span className="text-2xl font-black text-white">M</span>
-            </div>
-            <h1 className="text-2xl font-bold" style={{ color: '#F5EDE5' }}>Memento</h1>
+              <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
+
+          <div className="mt-6 rounded-2xl p-4" style={{ backgroundColor: '#3d2540' }}>
+            <p className="text-xs uppercase tracking-[0.3em]" style={{ color: '#C3BABA' }}>Workspace</p>
+            <p className="mt-2 text-xl font-bold" style={{ color: '#F5EDE5' }}>
+              {userProfile?.displayName || userProfile?.firstName || 'Memento User'}
+            </p>
+            <p className="mt-1 text-sm" style={{ color: '#C3BABA' }}>Stay organized across projects, tasks, notes, and calendar.</p>
+          </div>
+
+          <nav className="mt-8 flex-1 space-y-2">
+            {navItems.map((item, index) => {
+              const isActive = item.id === 'home'
+
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left transition-all"
+                  style={{
+                    backgroundColor: isActive ? '#F76C6C' : 'transparent',
+                    color: isActive ? '#F5EDE5' : '#C3BABA',
+                    border: isActive ? 'none' : '1px solid transparent',
+                  }}
+                  onClick={() => setIsSidebarOpen(false)}
+                >
+                  <span
+                    className="flex h-9 w-9 items-center justify-center rounded-xl text-sm font-bold"
+                    style={{
+                      backgroundColor: isActive ? 'rgba(245, 237, 229, 0.16)' : '#3d2540',
+                      color: isActive ? '#F5EDE5' : '#FFC93C',
+                    }}
+                  >
+                    {index + 1}
+                  </span>
+                  <span className="text-sm font-semibold tracking-wide">{item.label}</span>
+                </button>
+              )
+            })}
+          </nav>
+
           <button
             onClick={logout}
-            className="px-4 py-2 font-medium rounded-lg transition-colors"
-            style={{ color: '#C3BABA', border: '1px solid #3d2540' }}
-            onMouseOver={e => { e.currentTarget.style.color = '#F5EDE5'; e.currentTarget.style.borderColor = '#C3BABA' }}
-            onMouseOut={e => { e.currentTarget.style.color = '#C3BABA'; e.currentTarget.style.borderColor = '#3d2540' }}
+            className="mt-6 rounded-2xl px-4 py-3 text-sm font-semibold transition-colors"
+            style={{ color: '#F5EDE5', border: '1px solid #C3BABA', backgroundColor: 'transparent' }}
           >
             Sign Out
           </button>
         </div>
-      </header>
+      </aside>
 
-      {/* Main Content */}
-      <main className="container py-12 px-6">
-        <div className="max-w-4xl mx-auto">
+      <div className="flex min-h-screen flex-1 flex-col lg:pl-0">
+        {/* <header className="sticky top-0 z-20 px-4 py-4 sm:px-6 lg:px-10" style={{ backgroundColor: 'rgba(245, 237, 229, 0.9)', backdropFilter: 'blur(10px)' }}>
+          <div className="flex items-center justify-between rounded-2xl bg-white px-4 py-3 shadow-sm" style={{ border: '1px solid #CFCFCF' }}>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                className="rounded-xl p-2 lg:hidden"
+                style={{ backgroundColor: '#2D1B2E', color: '#F5EDE5' }}
+                onClick={() => setIsSidebarOpen(true)}
+                aria-label="Open navigation menu"
+              >
+                <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+              <img src="/assets/memento-logo-1.png" alt="Memento" className="h-10 w-auto object-contain" />
+            </div>
+
+            <div className="text-right">
+              <p className="text-xs uppercase tracking-[0.3em]" style={{ color: '#888888' }}>Dashboard</p>
+              <p className="text-sm font-semibold" style={{ color: '#2D1B2E' }}>
+                {userProfile?.email || 'Signed in user'}
+              </p>
+            </div>
+          </div>
+        </header> */}
+
+        <main className="px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
+          <div className="mx-auto max-w-5xl">
           {/* Welcome Card */}
-          <div className="bg-white rounded-xl p-8 mb-8 animate-slideUp" style={{ boxShadow: '0 4px 24px rgba(45,27,46,0.10)', border: '1px solid #CFCFCF' }}>
+          <div className="mb-8 rounded-xl bg-white p-8 animate-slideUp" style={{ boxShadow: '0 4px 24px rgba(45,27,46,0.10)', border: '1px solid #CFCFCF' }}>
             <h2 className="text-3xl font-black mb-4" style={{ color: '#2D1B2E' }}>
               Welcome back, {userProfile?.displayName || userProfile?.firstName || 'User'}! 👋
             </h2>
@@ -80,7 +169,7 @@ export const Dashboard = () => {
 
           {/* User Profile Card */}
           {userProfile && (
-            <div className="bg-white rounded-xl p-8 animate-slideUp" style={{ boxShadow: '0 4px 24px rgba(45,27,46,0.10)', border: '1px solid #CFCFCF', animationDelay: '0.2s' }}>
+            <div className="rounded-xl bg-white p-8 animate-slideUp" style={{ boxShadow: '0 4px 24px rgba(45,27,46,0.10)', border: '1px solid #CFCFCF', animationDelay: '0.2s' }}>
               <h3 className="text-2xl font-bold mb-6" style={{ color: '#2D1B2E' }}>Your Profile</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Avatar */}
@@ -134,8 +223,9 @@ export const Dashboard = () => {
               </div>
             </div>
           )}
-        </div>
-      </main>
+          </div>
+        </main>
+      </div>
     </div>
   )
 }

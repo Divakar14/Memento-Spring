@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from 'react-oidc-context'
 
@@ -8,16 +8,22 @@ export const SignUp = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
+  // Redirect to dashboard if user is already authenticated (post-OAuth callback)
+  useEffect(() => {
+    if (auth.isAuthenticated && !auth.isLoading && !loading) {
+      navigate('/dashboard', { replace: true })
+    }
+  }, [auth.isAuthenticated, auth.isLoading, loading, navigate])
+
   const handleKeycloakSignUp = async () => {
     try {
       setLoading(true)
       setError(null)
-      // Redirect to Keycloak registration page
-      const keycloakUrl = import.meta.env.VITE_KEYCLOAK_URL
-      const realm = import.meta.env.VITE_KEYCLOAK_REALM
-      const clientId = import.meta.env.VITE_KEYCLOAK_CLIENT_ID
-      
-      window.location.href = `${keycloakUrl}/realms/${realm}/protocol/openid-connect/auth?client_id=${clientId}&redirect_uri=${window.location.origin}/signin&response_type=code&scope=openid+profile+email&kc_action=register`
+      await auth.signinRedirect({
+        extraQueryParams: {
+          kc_action: 'register',
+        },
+      })
     } catch (err) {
       console.error('Sign up error:', err)
       setError(err.message || 'Failed to sign up')
@@ -29,12 +35,12 @@ export const SignUp = () => {
     try {
       setLoading(true)
       setError(null)
-      // This will be handled by Keycloak with Google as IDP
-      const keycloakUrl = import.meta.env.VITE_KEYCLOAK_URL
-      const realm = import.meta.env.VITE_KEYCLOAK_REALM
-      const clientId = import.meta.env.VITE_KEYCLOAK_CLIENT_ID
-      
-      window.location.href = `${keycloakUrl}/realms/${realm}/protocol/openid-connect/auth?client_id=${clientId}&redirect_uri=${window.location.origin}/signin&response_type=code&scope=openid+profile+email&kc_idp_hint=google&kc_action=register`
+      await auth.signinRedirect({
+        extraQueryParams: {
+          kc_action: 'register',
+          kc_idp_hint: 'google',
+        },
+      })
     } catch (err) {
       console.error('Google sign up error:', err)
       setError(err.message || 'Failed to sign up with Google')
@@ -48,7 +54,7 @@ export const SignUp = () => {
         {/* Logo Section */}
         <div className="text-center mb-12">
           <div className="w-60 h-60 mx-auto rounded-2xl flex items-center justify-center mb-6">
-            <img src="././dist/assets/memento-logo.png" alt="Memento Logo"/>
+            <img src="./assets/memento-logo.png" alt="Memento Logo"/>
           </div>
           {/* <div
             className="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center shadow-lg mb-6"
@@ -57,7 +63,7 @@ export const SignUp = () => {
             <span className="text-4xl font-black" style={{ color: '#FFC93C' }}>M</span>
           </div>
           <h1 className="text-4xl font-black mb-2" style={{ color: '#2D1B2E' }}>Memento</h1> */}
-          <p className="font-light" style={{ color: '#888888' }}>Join us to remember everything!</p>
+          <p className="font-light" style={{ color: '#F5EDE5' }}>Join us to remember everything!</p>
         </div>
 
         {/* Error Message */}
@@ -80,7 +86,7 @@ export const SignUp = () => {
           {/* Divider */}
           <div className="flex items-center gap-4 my-6">
             <div className="flex-1 h-px" style={{ backgroundColor: '#CFCFCF' }}></div>
-            <span className="text-sm font-medium" style={{ color: '#888888' }}>or</span>
+            <span className="text-sm font-medium" style={{ color: '#F5EDE5' }}>or</span>
             <div className="flex-1 h-px" style={{ backgroundColor: '#CFCFCF' }}></div>
           </div>
 
@@ -102,7 +108,7 @@ export const SignUp = () => {
 
         {/* Sign In Link */}
         <div className="mt-8 text-center">
-          <p style={{ color: '#888888' }}>
+          <p style={{ color: '#F5EDE5' }}>
             Already have an account?{' '}
             <button
               onClick={() => navigate('/signin')}
@@ -118,7 +124,7 @@ export const SignUp = () => {
 
         {/* Terms */}
         <div className="mt-8 pt-6 text-center" style={{ borderTop: '1px solid #CFCFCF' }}>
-          <p className="text-xs" style={{ color: '#888888' }}>
+          <p className="text-xs" style={{ color: '#F5EDE5' }}>
             By signing up, you agree to our{' '}
             <a href="#" className="hover:underline" style={{ color: '#F76C6C' }}>Terms of Service</a>
             {' '}and{' '}

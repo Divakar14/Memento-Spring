@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from 'react-oidc-context'
 
@@ -7,6 +7,13 @@ export const SignIn = () => {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+
+  // Redirect to dashboard if user is already authenticated (post-OAuth callback)
+  useEffect(() => {
+    if (auth.isAuthenticated && !auth.isLoading && !loading) {
+      navigate('/dashboard', { replace: true })
+    }
+  }, [auth.isAuthenticated, auth.isLoading, loading, navigate])
 
   const handleKeycloakLogin = async () => {
     try {
@@ -24,9 +31,10 @@ export const SignIn = () => {
     try {
       setLoading(true)
       setError(null)
-      // Redirect to Keycloak with Google IDP hint
       await auth.signinRedirect({
-        login_hint: 'google',
+        extraQueryParams: {
+          kc_idp_hint: 'google',
+        },
       })
     } catch (err) {
       console.error('Google sign in error:', err)
@@ -41,7 +49,7 @@ export const SignIn = () => {
         {/* Logo Section */}
         <div className="text-center mb-12">
           <div className="w-60 h-60 mx-auto rounded-2xl flex items-center justify-center mb-6">
-            <img src="././dist/assets/memento-logo.png" alt="Memento Logo"/>
+            <img src="./assets/memento-logo.png" alt="Memento Logo"/>
           </div>
           {/* <div
             className="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center shadow-lg mb-6"
@@ -50,7 +58,7 @@ export const SignIn = () => {
             <span className="text-4xl font-black" style={{ color: '#FFC93C' }}>M</span>
           </div>
           <h1 className="text-4xl font-black mb-2" style={{ color: '#2D1B2E' }}>Memento</h1> */}
-          <p className="font-light" style={{ color: '#888888' }}>Welcome back! Sign in to continue.</p>
+          <p className="font-light" style={{ color: '#F5EDE5' }}>Welcome back! Sign in to continue.</p>
         </div>
 
         {/* Error Message */}
@@ -73,7 +81,7 @@ export const SignIn = () => {
           {/* Divider */}
           <div className="flex items-center gap-4 my-6">
             <div className="flex-1 h-px" style={{ backgroundColor: '#CFCFCF' }}></div>
-            <span className="text-sm font-medium" style={{ color: '#888888' }}>or</span>
+            <span className="text-sm font-medium" style={{ color: '#F5EDE5' }}>or</span>
             <div className="flex-1 h-px" style={{ backgroundColor: '#CFCFCF' }}></div>
           </div>
 
@@ -95,7 +103,7 @@ export const SignIn = () => {
 
         {/* Sign Up Link */}
         <div className="mt-8 text-center">
-          <p style={{ color: '#888888' }}>
+          <p style={{ color: '#F5EDE5' }}>
             Don't have an account?{' '}
             <button
               onClick={() => navigate('/signup')}
@@ -111,7 +119,7 @@ export const SignIn = () => {
 
         {/* Privacy Notice */}
         <div className="mt-8 pt-6 text-center" style={{ borderTop: '1px solid #CFCFCF' }}>
-          <p className="text-xs" style={{ color: '#888888' }}>
+          <p className="text-xs" style={{ color: '#F5EDE5' }}>
             By signing in, you agree to our{' '}
             <a href="#" className="hover:underline" style={{ color: '#F76C6C' }}>Terms of Service</a>
             {' '}and{' '}

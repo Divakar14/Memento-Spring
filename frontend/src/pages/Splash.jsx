@@ -16,7 +16,7 @@ export const Splash = () => {
       } else {
         navigate('/signin')
       }
-    }, 10000)
+    }, 5000)
 
     return () => clearTimeout(timer)
   }, [auth.isAuthenticated, navigate])
@@ -39,7 +39,7 @@ export const Splash = () => {
       <div className={`relative z-10 text-center transition-all duration-1000 ${animate ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
         {/* Logo */}
         <div className="w-60 h-60 mx-auto rounded-2xl flex items-center justify-center mb-6">
-            <img src="././dist/assets/memento-logo.png" alt="Memento Logo"/>
+            <img src="./assets/memento-logo.png" alt="Memento Logo"/>
           {/* <div
             className="w-24 h-24 mx-auto rounded-2xl flex items-center justify-center shadow-2xl"
             style={{ backgroundColor: '#F5EDE5' }}
@@ -59,7 +59,7 @@ export const Splash = () => {
         </h1> */}
 
         {/* Subtitle */}
-        <p className="text-lg mb-12 font-light tracking-widest uppercase" style={{ color: '#C3BABA' }}>
+        <p className="text-lg mb-12 font-light tracking-widest uppercase" style={{ color: '#F5EDE5' }}>
           Capture · Organize · Remember
         </p>
 
@@ -72,7 +72,7 @@ export const Splash = () => {
       </div>
 
       {/* Bottom caption */}
-      <div className="absolute bottom-8 text-center text-sm font-light" style={{ color: '#888888' }}>
+      <div className="absolute bottom-8 text-center text-sm font-light" style={{ color: '#F5EDE5' }}>
         <p>Crafted with care for your memories</p>
       </div>
     </div>

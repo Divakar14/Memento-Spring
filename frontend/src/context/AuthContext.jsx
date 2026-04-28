@@ -40,15 +40,24 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUserProfile = async () => {
     try {
+      // Ensure token is available before making request
+      if (!auth.access_token) {
+        console.warn('Access token not yet available, skipping profile fetch')
+        setLoading(false)
+        return
+      }
+
       const userServiceUrl = import.meta.env.VITE_USER_SERVICE_URL
       const response = await fetch(`${userServiceUrl}/users/profile`, {
         headers: {
-          'Authorization': `Bearer ${auth.access_token}`
+          'Authorization': `Bearer ${auth.access_token}`,
+          'Content-Type': 'application/json',
         }
       })
 
       if (response.status === 401) {
         // Token expired, refresh will happen automatically
+        setLoading(false)
         return
       }
 
